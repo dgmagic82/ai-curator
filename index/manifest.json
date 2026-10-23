@@ -1,0 +1,32 @@
+{
+  "built_at": "2026-10-23T07:48:44+00:00",
+  "embed_model": "openai/text-embedding-3-small",
+  "documents": [
+    "faq",
+    "gd-1",
+    "gd-2",
+    "gd-3",
+    "gd-4",
+    "lec-1-1",
+    "lec-1-2",
+    "lec-1-3",
+    "lec-2-1",
+    "lec-2-2",
+    "lec-2-3",
+    "lec-3-1",
+    "lec-3-2",
+    "lec-3-3",
+    "lec-4-1",
+    "lec-4-2",
+    "lec-4-3",
+    "resources-advanced",
+    "resources-beginner"
+  ],
+  "chunks": 147,
+  "chunks_by_type": {
+    "faq": 32,
+    "методичка": 24,
+    "лекция": 72,
+    "ресурсы": 19
+  }
+}
