@@ -3,7 +3,6 @@
 import csv
 import json
 from datetime import date, datetime, timedelta
-from functools import lru_cache
 from pathlib import Path
 
 from curator import config
@@ -11,7 +10,6 @@ from curator import config
 SOFT_DEADLINE_DAYS = 3  # the FAQ rule: late work is accepted for 3 more days
 
 
-@lru_cache
 def get_schedule(lms_dir: Path = config.LMS_DIR) -> dict:
     return json.loads((lms_dir / "schedule.json").read_text(encoding="utf-8"))
 

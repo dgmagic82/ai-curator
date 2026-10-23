@@ -81,7 +81,8 @@ def load_index(index_dir: Path = config.INDEX_DIR) -> FAISS:
     return FAISS.load_local(str(index_dir), embeddings(), allow_dangerous_deserialization=True)
 
 
-def make_filter(module: int | None = None, doc_type: str | None = None, level: str | None = None):
+def make_filter(module: int | None = None, doc_type: str | None = None, level: str | None = None,
+                topic: str | None = None):
     """Metadata filter. Organizational docs (module 0) pass the module filter, so a student who narrowed the
     search to one module still gets answers about deadlines and the certificate. Level hides material of the
     other level; «все» is shown to everyone."""
@@ -92,8 +93,16 @@ def make_filter(module: int | None = None, doc_type: str | None = None, level: s
             return False
         if level is not None and meta["level"] not in ("все", level):
             return False
+        if topic is not None and meta["topic"] != topic:
+            return False
         return True
     return keep
+
+
+def topics(module: int | None = None, kb_dir: Path = config.KB_DIR) -> list[str]:
+    """Topics for the search filter, limited to the chosen module (plus organizational docs, as in make_filter)."""
+    metas = [parse_doc(p.read_text(encoding="utf-8"))[0] for p in sorted(kb_dir.rglob("*.md"))]
+    return sorted({m["topic"] for m in metas if module is None or m["module"] in (0, module)})
 
 
 def search(index: FAISS, query: str, k: int = config.TOP_K, **filters) -> list[tuple[Document, float]]:

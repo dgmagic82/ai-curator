@@ -92,10 +92,11 @@ def llm() -> ChatOpenAI:
 
 
 def ask(question: str, student_id: str, level: str, index, history: list[dict] | None = None,
-        module: int | None = None, doc_type: str | None = None, model: ChatOpenAI | None = None) -> CuratorResult:
+        module: int | None = None, doc_type: str | None = None, topic: str | None = None,
+        model: ChatOpenAI | None = None) -> CuratorResult:
     started = time.perf_counter()
-    hits = kb.search(index, question, module=module, doc_type=doc_type, level=level)
-    if doc_type is None:
+    hits = kb.search(index, question, module=module, doc_type=doc_type, level=level, topic=topic)
+    if doc_type is None and topic is None:
         # lectures outrank reading lists on almost any topic, so recommendations get their own slots
         seen = {d.page_content for d, _ in hits}
         hits += [h for h in kb.search(index, question, k=RESOURCE_SLOTS, module=module, doc_type="ресурсы", level=level)

@@ -15,6 +15,11 @@ def index():
     return kb.load_index()
 
 
+@st.cache_data
+def topics(module):
+    return kb.topics(module)
+
+
 with st.sidebar:
     st.header("Студент")
     students = {s["student_id"]: s for s in lms.get_students()}
@@ -27,6 +32,7 @@ with st.sidebar:
     module = st.selectbox("Модуль", list(MODULES), format_func=MODULES.get,
                           help="Организационные вопросы (FAQ) доступны при любом модуле")
     doc_type = st.selectbox("Тип материала", list(TYPES), format_func=TYPES.get)
+    topic = st.selectbox("Тема", [None] + topics(module), format_func=lambda t: t or "Все темы")
     st.caption(f"Демо-дата LMS: {config.DEMO_TODAY:%d.%m.%Y}. Студенты и курс вымышленные.")
     with st.expander("Задания студента в LMS"):
         for a in lms.get_assignments(sid):
@@ -51,7 +57,7 @@ for m in st.session_state.messages:
 
 left = config.MAX_QUESTIONS_PER_SESSION - st.session_state.asked
 if left <= 0:
-    st.info("Лимит демо: 15 вопросов за сессию. Обновите страницу позже.")
+    st.info("Лимит демо: 15 вопросов за сессию исчерпан.")
 elif question := st.chat_input("Спросите о дедлайнах, материалах или что почитать дальше"):
     question = question.strip()[:config.MAX_QUESTION_CHARS]
     with st.chat_message("user"):
@@ -60,7 +66,7 @@ elif question := st.chat_input("Спросите о дедлайнах, мате
         with st.spinner("Ищу в материалах курса…"):
             try:
                 r = chain.ask(question, sid, level, index(), history=st.session_state.messages,
-                              module=module, doc_type=doc_type)
+                              module=module, doc_type=doc_type, topic=topic)
             except Exception as e:
                 st.error(f"Не получилось ответить: {type(e).__name__}. Попробуйте ещё раз.")
                 st.stop()
@@ -77,7 +83,7 @@ elif question := st.chat_input("Спросите о дедлайнах, мате
     st.session_state.asked += 1
     st.session_state.messages += [{"role": "user", "content": question},
                                   {"role": "assistant", "content": r.answer, "sources": r.sources}]
-    log_query({"student_id": sid, "level": level, "module_filter": module, "type_filter": doc_type,
+    log_query({"student_id": sid, "level": level, "module_filter": module, "type_filter": doc_type, "topic_filter": topic,
                "question": question, "category": r.category, "escalate": r.escalate,
                "sources": [s["doc_id"] for s in r.sources],
                "source_modules": [s["module"] for s in r.sources if s["module"] is not None],

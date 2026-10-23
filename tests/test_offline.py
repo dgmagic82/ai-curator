@@ -60,7 +60,7 @@ def test_whole_kb_parses():
 
 
 @pytest.mark.parametrize("meta,filters,expected", [
-    ({"module": 0, "type": "faq", "level": "все"}, {"module": 3}, True),  # FAQ passes any module
+    ({"module": 0, "type": "faq", "level": "все", "topic": "организационные вопросы"}, {"module": 3}, True),  # FAQ passes any module
     ({"module": 2, "type": "лекция", "level": "все"}, {"module": 3}, False),
     ({"module": 3, "type": "лекция", "level": "все"}, {"module": 3, "doc_type": "лекция"}, True),
     ({"module": 3, "type": "методичка", "level": "все"}, {"doc_type": "лекция"}, False),
@@ -69,6 +69,14 @@ def test_whole_kb_parses():
 ])
 def test_make_filter(meta, filters, expected):
     assert kb.make_filter(**filters)(meta) is expected
+
+
+def test_topic_filter_and_topic_list():
+    meta = {"module": 3, "type": "лекция", "level": "все", "topic": "эмбеддинги"}
+    assert kb.make_filter(topic="эмбеддинги")(meta) and not kb.make_filter(topic="агенты")(meta)
+    all_topics, module3 = kb.topics(), kb.topics(3)
+    assert set(module3) < set(all_topics)
+    assert "организационные вопросы" in module3  # FAQ stays reachable under any module, as in make_filter
 
 
 def test_assignments_use_personal_extension():
