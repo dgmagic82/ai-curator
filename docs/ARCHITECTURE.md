@@ -12,7 +12,7 @@ flowchart LR
     P --> M[gpt-4.1-mini через OpenRouter]
     M -->|JSON: answer, sources, category, escalate| A
     A --> S
-    A --> G[logs/queries.jsonl] --> D[Страница «Аналитика»]
+    A --> G[(logs/curator.db: лог и кэш)] --> D[«Аналитика» и /stats бота]
 ```
 
 ## Индексация
@@ -111,4 +111,6 @@ flowchart LR
 
 `app.py` служит точкой входа и навигацией. Страницы лежат в `views/`:
 - `views/curator.py`: чат, выбор студента и уровня, фильтры, источники под ответом, блок «Как искал ответ»;
-- `views/analytics.py`: дашборд по `logs/queries.jsonl` или по примеру `logs/sample_queries.jsonl`.
+- `views/analytics.py`: дашборд по SQLite-логу `logs/curator.db` или по примеру `logs/sample_queries.jsonl`.
+
+Telegram-бот (`bot.py`) и сайт вызывают один обработчик `curator/service.py`: проверка запроса, кэш, цепочка ответа, запись в лог.

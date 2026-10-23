@@ -121,12 +121,13 @@ async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     s = LOGGER.get_stats()
     rejected = ", ".join(f"{k}: {v}" for k, v in s["rejected"].items()) or "нет"
     categories = ", ".join(f"{k}: {v}" for k, v in s["by_category"].items()) or "нет"
+    channels = ", ".join(f"{k}: {v}" for k, v in s["by_channel"].items()) or "нет"
     answered = s["answered"] or 1
     await update.message.reply_text(
         f"📊 Статистика куратора\n\n"
         f"Запросов: {s['total']} (ответов {s['answered']}, ошибок {s['errors']})\n"
         f"Отклонено: {rejected}\n"
-        f"Пользователей: {s['users']}, каналы: {s['by_channel']}\n"
+        f"Пользователей: {s['users']}, каналы: {channels}\n"
         f"Из кэша: {s['from_cache']} ({s['from_cache'] / answered:.0%})\n"
         f"Время ответа без кэша: среднее {s['avg_ms'] / 1000:.1f} с, 95% быстрее {s['p95_ms'] / 1000:.1f} с\n"
         f"Передано человеку: {s['escalated']}, без источника: {s['no_source']}\n"
