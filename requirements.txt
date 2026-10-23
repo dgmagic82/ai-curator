@@ -49,11 +49,15 @@ h11==0.16.0
     #   httpcore2
     #   uvicorn
 httpcore==1.0.9
-    # via httpx
+    # via
+    #   httpx
+    #   python-telegram-bot
 httpcore2==2.16.0 ; sys_platform != 'emscripten'
     # via httpx2
 httpx==0.28.1
-    # via langchain-core
+    # via
+    #   langchain-core
+    #   python-telegram-bot
 httpx-sse==0.4.3
     # via langchain-community
 httpx2==2.16.0
@@ -167,6 +171,8 @@ python-dotenv==1.2.4
     # via pydantic-settings
 python-multipart==0.0.32
     # via streamlit
+python-telegram-bot==22.8
+    # via ai-curator
 pyyaml==6.0.3
     # via
     #   langchain-classic

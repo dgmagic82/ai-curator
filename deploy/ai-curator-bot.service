@@ -1,0 +1,19 @@
+[Unit]
+Description=AI curator Telegram bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/ai-curator
+EnvironmentFile=/opt/ai-curator/.env
+ExecStart=/opt/ai-curator/venv/bin/python bot.py
+Restart=on-failure
+RestartSec=10
+# the bot needs only its own folder: logs/curator.db is the one file it writes
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/ai-curator/logs
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 .env
 .streamlit/secrets.toml
-logs/queries.jsonl
 eval/results.json
 .claude/
+logs/*.db
+logs/*.csv

@@ -14,7 +14,7 @@ KB_DIR = ROOT / "kb"
 INDEX_DIR = ROOT / "index"
 LMS_DIR = ROOT / "lms"
 PROMPTS_DIR = ROOT / "prompts"
-LOG_FILE = ROOT / "logs" / "queries.jsonl"
+DB_FILE = Path(os.environ.get("CURATOR_DB", ROOT / "logs" / "curator.db"))
 SAMPLE_LOG_FILE = ROOT / "logs" / "sample_queries.jsonl"
 
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -25,6 +25,7 @@ TOP_K = 4
 
 MAX_QUESTION_CHARS = 1000
 MAX_QUESTIONS_PER_SESSION = 15
+MAX_QUESTIONS_PER_DAY_TELEGRAM = 20
 
 # The LMS data is a frozen demo of one cohort, so "today" is fixed too; otherwise every deadline
 # would drift into the past a week after publishing.

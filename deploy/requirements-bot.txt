@@ -1,0 +1,7 @@
+# Telegram bot only: no Streamlit and pandas, the server has 1 GB of free memory
+faiss-cpu==1.15.1
+langchain-community==0.4.2
+langchain-openai==1.7.2
+langchain-text-splitters==1.1.3
+pydantic==2.14.1
+python-telegram-bot==22.8
